@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-public class ParserTool {
+public class DemoParser {
     private void getPackage(File filePath) throws FileNotFoundException {
         CompilationUnit cu = StaticJavaParser.parse(filePath);
         List<PackageDeclaration> packages = cu.findAll(PackageDeclaration.class);
@@ -36,10 +36,10 @@ public class ParserTool {
 
 
     public static void main(String[] args) throws FileNotFoundException {
-        ParserTool parserTool = new ParserTool();
+        DemoParser parserToolES = new DemoParser();
         File file = new File("D:\\Architecture (JavaParser)\\ParserTool\\src\\main\\java\\vn\\com\\edu\\fit\\models\\Car.java");
-        parserTool.getAllField(file);
-        parserTool.getAllMethods(file);
-        parserTool.getPackage(file);
+        parserToolES.getAllField(file);
+        parserToolES.getAllMethods(file);
+        parserToolES.getPackage(file);
     }
 }

@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     implementation ("com.github.javaparser:javaparser-core:3.25.8")
+    implementation ("dev.mccue:guava-base:0.0.4")
 }
 
 tasks.test {
