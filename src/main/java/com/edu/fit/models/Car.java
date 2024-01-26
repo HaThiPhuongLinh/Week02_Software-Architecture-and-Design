@@ -1,4 +1,4 @@
-package vn.com.edu.fit.models;
+package com.edu.fit.models;
 
 public class Car {
     private String name;

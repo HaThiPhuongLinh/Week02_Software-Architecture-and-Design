@@ -1,4 +1,4 @@
-package com.edu.fit.tool;
+package com.edu.fit.example;
 
 
 import com.github.javaparser.StaticJavaParser;

@@ -1,4 +1,4 @@
-package vn.com.edu.fit.node;
+package com.edu.fit.node;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.edu.fit.tool;
+package com.edu.fit.example;
 
 import java.io.File;
 

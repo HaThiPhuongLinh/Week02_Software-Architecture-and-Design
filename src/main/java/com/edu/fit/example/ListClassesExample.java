@@ -1,5 +1,6 @@
-package com.edu.fit.tool;
+package com.edu.fit.example;
 
+import com.edu.fit.example.DirExplorer;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
