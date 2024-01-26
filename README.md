@@ -20,11 +20,11 @@ ___________
     ```
  3. org.apache.opennlp:opennlp-tools:2.3.1: thư viện Java cung cấp các công cụ xử lý ngôn ngữ tự nhiên.
     ``` js
-        implementation ("org.apache.opennlp:opennlp-tools:2.3.1")
+    implementation ("org.apache.opennlp:opennlp-tools:2.3.1")
     ```
  5. JavaParser: phân tích các file Java
     ``` js
-        implementation ("com.github.javaparser:javaparser-core:3.25.8")
+    implementation ("com.github.javaparser:javaparser-core:3.25.8")
     ```
 ### Nguyên tắc chung
 1. Dùng DirExplorer để duyệt qua các files.
