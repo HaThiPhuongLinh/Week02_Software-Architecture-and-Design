@@ -119,4 +119,6 @@ ___________
             return true;
         }).explore(projectDir);
     }
-```
+ 
+### Result
+![image](https://github.com/HaThiPhuongLinh/Week02_Software-Architecture-and-Design/assets/109422010/931f322a-94e9-42a1-990b-101be1bfc375)
