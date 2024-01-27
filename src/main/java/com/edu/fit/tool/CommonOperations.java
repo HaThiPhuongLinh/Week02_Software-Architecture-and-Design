@@ -9,6 +9,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import dev.mccue.guava.base.Strings;
 
+import javax.swing.*;
 import java.io.File;
 
 public class CommonOperations {
@@ -63,8 +64,16 @@ public class CommonOperations {
     }
 
     public static void main(String[] args) {
-        File projectDir = new File("D:\\DemoParser");
-        ErrorReport errorReport = new ErrorReport();
-        CommonOperations.listMethodCalls(errorReport, projectDir);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int result = fileChooser.showOpenDialog(null);
+
+        if(result == JFileChooser.APPROVE_OPTION){
+            File projectDir = fileChooser.getSelectedFile();
+            ErrorReport errorReport = new ErrorReport();
+            CommonOperations.listMethodCalls(errorReport, projectDir);
+        } else {
+            System.out.println("Please choose File");
+        }
     }
 }

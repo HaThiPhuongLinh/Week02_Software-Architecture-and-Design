@@ -17,7 +17,6 @@ public class ErrorReport extends JFrame {
     private final List<ErrorEntry> errors = new ArrayList<>();
     private JTable tblReport;
     private DefaultTableModel modelTblReport;
-    public static ErrorReport instance;
 
     public void addError(String type, String name, String errorDescription) {
         errors.add(new ErrorEntry(type, name, errorDescription));
@@ -29,6 +28,7 @@ public class ErrorReport extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
+        setResizable(false);
 
         JLabel lblTitle = new JLabel("REPORT");
         lblTitle.setFont(new Font("Arial", Font.BOLD, 25));
@@ -42,7 +42,7 @@ public class ErrorReport extends JFrame {
 
         JLabel lblFileValue = new JLabel(projectDir.getAbsolutePath());
         lblFileValue.setFont(new Font("Arial", Font.ITALIC, 15));
-        lblFileValue.setBounds(90,60,300,50);
+        lblFileValue.setBounds(90,60,700,50);
         add(lblFileValue);
 
         String[] columns = {"Type", "Name", "Error Description"};
@@ -84,8 +84,6 @@ public class ErrorReport extends JFrame {
         add(scrollPane);
         setVisible(true);
     }
-
-
 
     private static class ErrorEntry {
         private final String type;
