@@ -11,42 +11,74 @@ public class LegalChecking {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     private static final POSTagging pos = new POSTagging();
+    private ErrorReport errorReport = new ErrorReport();
+
+    public void printErrorReport(ErrorReport errorReport) {
+        this.errorReport = errorReport;
+    }
 
     public void checkLegalPackage(String pkgName) {
         String regex = "com\\.edu\\.fit.*";
 
+//        if (!pkgName.matches(regex)) {
+//            System.out.println(ANSI_RED + "Package [" + pkgName + "] is invalid (must follow 'com.edu.fit.*' (*:anything)) " + ANSI_RESET);
+//        }
         if (!pkgName.matches(regex)) {
-            System.out.println(ANSI_RED + "Package [" + pkgName + "] is invalid (must follow 'com.edu.fit.*' (*:anything)) " + ANSI_RESET);
+            errorReport.addError("Package", pkgName, " must follow 'com.edu.fit.*' (*:anything)");
         }
     }
+
 
     public void checkLegalClass(String className, ClassOrInterfaceDeclaration classDeclaration) {
         boolean startsWithUpperCase = Character.isUpperCase(className.charAt(0));
         boolean isNoun = pos.isNoun(className);
         boolean hasClassDesc = hasClassDescription(classDeclaration);
 
+//        if (!startsWithUpperCase || !isNoun || !hasClassDesc) {
+//            System.out.print(ANSI_RED + "Class [" + className + "] ");
+//
+//            if (!startsWithUpperCase) {
+//                System.out.print("must start with an uppercase letter");
+//                if (!isNoun || !hasClassDesc) {
+//                    System.out.print(" and ");
+//                }
+//            }
+//
+//            if (!isNoun) {
+//                System.out.print("must be a noun or noun phrase");
+//                if (!hasClassDesc) {
+//                    System.out.print(" and ");
+//                }
+//            }
+//
+//            if (!hasClassDesc) {
+//                System.out.print("must have a class description");
+//            }
+//
+//            System.out.println(ANSI_RESET);
+//        }
         if (!startsWithUpperCase || !isNoun || !hasClassDesc) {
-            System.out.print(ANSI_RED + "Class [" + className + "] ");
+            String errorMsg = " ";
 
             if (!startsWithUpperCase) {
-                System.out.print("must start with an uppercase letter");
+                errorMsg += "must start with an uppercase letter";
                 if (!isNoun || !hasClassDesc) {
-                    System.out.print(" and ");
+                    errorMsg += " and ";
                 }
             }
 
             if (!isNoun) {
-                System.out.print("must be a noun or noun phrase");
+                errorMsg += "must be a noun or noun phrase";
                 if (!hasClassDesc) {
-                    System.out.print(" and ");
+                    errorMsg += " and ";
                 }
             }
 
             if (!hasClassDesc) {
-                System.out.print("must have a class description");
+                errorMsg += "must have a class description";
             }
 
-            System.out.println(ANSI_RESET);
+            errorReport.addError("Class", className, errorMsg);
         }
     }
 
@@ -68,23 +100,52 @@ public class LegalChecking {
         boolean startsWithLowerCase = Character.isLowerCase(fieldName.charAt(0));
         boolean isNoun = pos.isNoun(fieldName);
 
+//        if (isConstant) {
+//            if (!isInInterface(fieldDeclaration) || !isUpperCase(fieldDeclaration.getVariable(0).getNameAsString())) {
+//                System.out.println(ANSI_RED + "Constant [" + fieldDeclaration.getVariable(0).getNameAsString() + "] is invalid" + ANSI_RESET);
+//            }
+//        } else {
+//            if (!startsWithLowerCase || !isNoun) {
+//                System.out.print(ANSI_RED + "Field [" + fieldDeclaration.getVariable(0).getNameAsString() + "]");
+//                if (!startsWithLowerCase) {
+//                    System.out.print(" must start with a lowercase letter");
+//                }
+//                if (!startsWithLowerCase && !isNoun) {
+//                    System.out.print(" and");
+//                }
+//                if (!isNoun) {
+//                    System.out.print(" must be a noun or noun phrase");
+//                }
+//                System.out.println(ANSI_RESET);
+//            }
+//        }
         if (isConstant) {
-            if (!isInInterface(fieldDeclaration) || !isUpperCase(fieldDeclaration.getVariable(0).getNameAsString())) {
-                System.out.println(ANSI_RED + "Constant [" + fieldDeclaration.getVariable(0).getNameAsString() + "] is invalid" + ANSI_RESET);
+            if (!isInInterface(fieldDeclaration) && !isUpperCase(fieldDeclaration.getVariable(0).getNameAsString())) {
+                errorReport.addError("Constant", fieldDeclaration.getVariable(0).getNameAsString(), " must be uppercase letter and in Interface");
+            }
+            if (!isInInterface(fieldDeclaration)) {
+                errorReport.addError("Constant", fieldDeclaration.getVariable(0).getNameAsString(), " must be in Interface");
+            }
+            if (!isUpperCase(fieldDeclaration.getVariable(0).getNameAsString())) {
+                errorReport.addError("Constant", fieldDeclaration.getVariable(0).getNameAsString(), " must be uppercase letter");
             }
         } else {
             if (!startsWithLowerCase || !isNoun) {
-                System.out.print(ANSI_RED + "Field [" + fieldDeclaration.getVariable(0).getNameAsString() + "]");
+                String errorMsg = " ";
+
                 if (!startsWithLowerCase) {
-                    System.out.print(" must start with a lowercase letter");
+                    errorMsg += "must start with a lowercase letter";
                 }
+
                 if (!startsWithLowerCase && !isNoun) {
-                    System.out.print(" and");
+                    errorMsg += " and";
                 }
+
                 if (!isNoun) {
-                    System.out.print(" must be a noun or noun phrase");
+                    errorMsg += "must be a noun or noun phrase";
                 }
-                System.out.println(ANSI_RESET);
+
+                errorReport.addError("Field", fieldDeclaration.getVariable(0).getNameAsString(), errorMsg);
             }
         }
     }
@@ -107,35 +168,62 @@ public class LegalChecking {
         boolean isVerb = pos.isVerb(tokens[0]);
         boolean hasMethodDesc = hasMethodDescription(methodDeclaration);
 
+//        if (!methodName.equals("hashCode") && !methodName.equals("equals") && !methodName.equals("toString") && !methodName.startsWith("get") && !methodName.startsWith("set") && !methodName.equals("main")) {
+//
+//            if (!startsWithLowerCase || !isVerb || !hasMethodDesc) {
+//                System.out.print(ANSI_RED + "Method [" + methodName + "]");
+//
+//                if (!startsWithLowerCase) {
+//                    System.out.print(" must start with a lowercase letter");
+//                    if (!isVerb || !hasMethodDesc) {
+//                        System.out.print(" and ");
+//                    }
+//                }
+//
+//                if (!startsWithLowerCase && !isVerb) {
+//                    System.out.print(" and");
+//                }
+//
+//                if (!isVerb) {
+//                    System.out.print(" must be a verb");
+//                    if (!hasMethodDesc) {
+//                        System.out.print(" and ");
+//                    }
+//                }
+//
+//                if (!hasMethodDesc) {
+//                    System.out.print("must have a method description");
+//                }
+//
+//                System.out.println(ANSI_RESET);
+//            }
+//        }
         if (!methodName.equals("hashCode") && !methodName.equals("equals") && !methodName.equals("toString") && !methodName.startsWith("get") && !methodName.startsWith("set") && !methodName.equals("main")) {
+            String errorMsg = " ";
 
-            if (!startsWithLowerCase || !isVerb || !hasMethodDesc) {
-                System.out.print(ANSI_RED + "Method [" + methodName + "]");
-
-                if (!startsWithLowerCase) {
-                    System.out.print(" must start with a lowercase letter");
-                    if (!isVerb || !hasMethodDesc) {
-                        System.out.print(" and ");
-                    }
+            if (!startsWithLowerCase) {
+                errorMsg += "must start with a lowercase letter";
+                if (!isVerb || !hasMethodDesc) {
+                    errorMsg += " and ";
                 }
-
-                if (!startsWithLowerCase && !isVerb) {
-                    System.out.print(" and");
-                }
-
-                if (!isVerb) {
-                    System.out.print(" must be a verb");
-                    if (!hasMethodDesc) {
-                        System.out.print(" and ");
-                    }
-                }
-
-                if (!hasMethodDesc) {
-                    System.out.print("must have a method description");
-                }
-
-                System.out.println(ANSI_RESET);
             }
+
+            if (!startsWithLowerCase && !isVerb) {
+                errorMsg += " and";
+            }
+
+            if (!isVerb) {
+                errorMsg += "must be a verb";
+                if (!hasMethodDesc) {
+                    errorMsg += " and ";
+                }
+            }
+
+            if (!hasMethodDesc) {
+                errorMsg += "must have a method description";
+            }
+
+            errorReport.addError("Method", methodName, errorMsg);
         }
     }
 
